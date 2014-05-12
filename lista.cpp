@@ -3,7 +3,6 @@
 using namespace std;
 
 
-
 struct obj
 {
 	obj * next;
@@ -13,18 +12,17 @@ struct obj
 class  Lista
 {
 	private:
-	 obj * front, * back;
-	 unsigned counter;
+		obj * front, * back;
+	 	unsigned counter;
 	
 	public: 
 	
-	
-	Lista();
-	obj* pushFront (obj * p);
-	obj* popFront();
-	obj* popBack();
-	obj* erase( obj * p);
-	void showValues();
+		Lista();
+		obj* pushFront (obj * p);
+		obj* popFront();
+		obj* popBack();
+		obj* erase( obj * p);
+		void showValues();
 	
 };
 
@@ -37,11 +35,11 @@ Lista::Lista()
 	
 obj * Lista::pushFront (obj * p)
 {
-p->next = front;
-front = p;
-if (!back) back = front;
-counter++;
-return front;
+	p->next = front;
+	front = p;
+	if (!back) back = front;
+	counter++;
+	return front;
 	
 }
     
@@ -89,11 +87,11 @@ obj * Lista::popBack()
 
     obj * Lista::erase(obj * p)
     {
-      obj * p1;
+    	obj * p1;
 
-      if(p == front) return popFront();
-      else
-      {
+    	if(p == front) return popFront();
+    	else
+    	{
         p1 = front;
         while(p1->next != p) 
 		{
@@ -103,7 +101,7 @@ obj * Lista::popBack()
         
         counter--;
         return p;
-      }
+    	}
     } 
 
 
@@ -128,23 +126,22 @@ void Lista::showValues()
     
   main()
 {
-  Lista    sl;
-  obj * p;
-  int     i;
+	Lista sl;
+	obj * p;
+	int   i;
   
-  cout << "(A) : "; sl.showValues();  
+	cout << "(A) : "; sl.showValues();  
   
-   for(i = 1; i <= 1000; i++)
-  {
-    p = new obj;
-    p->value = i;
-    sl.pushFront(p);
-  }
+	for(i = 1; i <= 1000; i++)
+	{
+	    p = new obj;
+	    p->value = i;
+	    sl.pushFront(p);
+	}
 
-  cout << "(B) : ";   sl.showValues();
+	cout << "(B) : ";   sl.showValues();
   
-  
-  sl.popFront();
+	sl.popFront();
   
 	cout << "(C) : ";   sl.showValues(); 
 }
