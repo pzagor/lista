@@ -2,6 +2,7 @@
 #include <iostream>
 using namespace std;
 
+#include "test.h"
 
 struct obj
 {
@@ -23,6 +24,10 @@ class  Lista
 		obj* popBack();
 		obj* erase( int val);
 		void showValues();
+		unsigned  size() { return counter; } 
+		
+		obj* first() { return front; }
+		obj* last()  { return back; }
 	
 };
 
@@ -102,7 +107,13 @@ obj * Lista::popBack()
 //    counter--;
 //    return p;
 //	}
-//} 
+//}
+
+/// usuwa element o wartosc val z listy
+
+/// - jak elementu ?
+/// - jak sa dwa lub wiecej takie lementy ?
+
 obj * Lista::erase(int val)
 {
 	obj * p;
@@ -114,7 +125,7 @@ obj * Lista::erase(int val)
     p = front;
     while(p->value != val) 
 	{
-		p = p->next;
+	    p = p->next;
 	}
 	cout << p->value;
     p1 = p->next;
@@ -142,27 +153,72 @@ void Lista::showValues()
         cout << endl;
       }
     }
-    
-    
-  main()
+
+
+
+void test_zbyszka() 
 {
+    Lista sl;
+    
+    CHECK_EQUAL(sl.size(), 0 );
+    
+    for(int i = 1; i <= 10; i++)
+    {
+        obj* p = new obj;
+        p->value = i;
+        sl.pushFront(p);
+        CHECK_EQUAL(sl.size(), i );
+    }
+    CHECK_EQUAL(sl.size(), 10 );
+    sl.popFront();
+    CHECK_EQUAL(sl.size(), 9 );
+    sl.erase(5);
+    CHECK_EQUAL(sl.size(), 8 );
+}
+
+void test_na_usuwanie()
+{
+    Lista sl;
+    CHECK_EQUAL(sl.size(), 0 );
+    for(int i = 1; i <= 3; i++)
+    {
+        obj* p = new obj;
+        p->value = i;
+        sl.pushFront(p);
+    }
+    
+    CHECK_EQUAL(sl.first()->value, 3);
+    CHECK_EQUAL(sl.first()->next->value, 2);
+    CHECK_EQUAL(sl.first()->next->next->value, 1);
+    
+    sl.erase(1);
+    
+    CHECK_EQUAL(sl.first()->value, 3);
+    CHECK_EQUAL(sl.first()->next->value, 2);
+    //CHECK_EQUAL(sl.first()->next->next, 0);
+    CHECK_EQUAL(sl.size(), 2);
+}
+
+void stare_main()
+{
+
 	Lista sl;
-	obj * p;
 	int   i;
   
 	cout << "(A) : "; sl.showValues();  
   
 	for(i = 1; i <= 10; i++)
 	{
-	    p = new obj;
+	    obj* p = new obj;
 	    p->value = i;
 	    sl.pushFront(p);
 	}
 
+
 	cout << "(B) : ";   sl.showValues();
   
 	sl.popFront();
-  
+
 	cout << "(C) : ";   sl.showValues(); 
 	
 	sl.erase(5);
@@ -170,3 +226,15 @@ void Lista::showValues()
 	cout << "(5) : ";   sl.showValues();
 }
 
+int main(int argc, char** argv)
+{
+    RUN_TEST(stare_main);
+    RUN_TEST(test_zbyszka);
+    RUN_TEST(test_na_usuwanie);
+    
+    if( error_count != 0 ) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
