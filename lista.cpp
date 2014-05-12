@@ -21,7 +21,7 @@ class  Lista
 		obj* pushFront (obj * p);
 		obj* popFront();
 		obj* popBack();
-		obj* erase( obj * p);
+		obj* erase( int val);
 		void showValues();
 	
 };
@@ -85,25 +85,45 @@ obj * Lista::popBack()
 }
 
 
-    obj * Lista::erase(obj * p)
-    {
-    	obj * p1;
+//obj * Lista::erase(obj * p)
+//{
+//	obj * p1;
+//
+//	if(p == front) return popFront();
+//	else
+//	{
+//    p1 = front;
+//    while(p1->next != p) 
+//	{
+//		p1 = p1->next;
+//	}
+//    p1->next = p->next;
+//    
+//    counter--;
+//    return p;
+//	}
+//} 
+obj * Lista::erase(int val)
+{
+	obj * p;
+	obj * p1;
 
-    	if(p == front) return popFront();
-    	else
-    	{
-        p1 = front;
-        while(p1->next != p) 
-		{
-			p1 = p1->next;
-		}
-        p1->next = p->next;
-        
-        counter--;
-        return p;
-    	}
-    } 
-
+	if(val == front->value) return popFront();
+	else
+	{
+    p = front;
+    while(p->value != val) 
+	{
+		p = p->next;
+	}
+	cout << p->value;
+    p1 = p->next;
+	p->next = p1->next;
+    
+    counter--;
+    return p1;
+	}
+} 
 
 
 void Lista::showValues()
@@ -132,7 +152,7 @@ void Lista::showValues()
   
 	cout << "(A) : "; sl.showValues();  
   
-	for(i = 1; i <= 1000; i++)
+	for(i = 1; i <= 10; i++)
 	{
 	    p = new obj;
 	    p->value = i;
@@ -144,5 +164,9 @@ void Lista::showValues()
 	sl.popFront();
   
 	cout << "(C) : ";   sl.showValues(); 
+	
+	sl.erase(5);
+	
+	cout << "(5) : ";   sl.showValues();
 }
 
