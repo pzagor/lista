@@ -134,7 +134,7 @@ void Lista::showValues()
   
   cout << "(A) : "; sl.showValues();  
   
-   for(i = 1; i <= 5; i++)
+   for(i = 1; i <= 1000; i++)
   {
     p = new obj;
     p->value = i;
