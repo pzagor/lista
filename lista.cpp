@@ -19,10 +19,10 @@ class  Lista
 	public: 
 	
 		Lista();
-		obj* pushFront (obj * p);
-		obj* popFront();
-		obj* popBack();
-		obj* erase( int val);
+		void pushFront(int val);
+		int popFront();
+		int popBack();
+		int erase( int val);
 		void showValues();
 		unsigned  size() { return counter; } 
 		
@@ -38,31 +38,36 @@ Lista::Lista()
 	counter = 0;
 }
 	
-obj * Lista::pushFront (obj * p)
+void Lista::pushFront(int val)
 {
-	p->next = front;
+	obj * p;
+	if (!front) p->next = NULL;
+	else {p->next = front;}
+	p->value = val;
 	front = p;
 	if (!back) back = front;
 	counter++;
-	return front;
-	
 }
+
     
-obj * Lista::popFront()
+   //pushBack
+    
+    
+int Lista::popFront()
 {
-	obj * p;
+	obj * p; 
 	if (front)
 	{
 		p = front;	
 		front = front->next;
 		if(!front) back = NULL;
 		counter--;
-		return p; 	
+		 	
 	}
-	else return NULL;
+	else return p->value;
 }
 
-obj * Lista::popBack()
+int Lista::popBack()
 {
 	obj * p;
 	if (back)
@@ -82,9 +87,9 @@ obj * Lista::popBack()
 			back->next = NULL;
 		} 
 		counter--;
-		return p;
+		
 	}
-	else  return NULL;
+	//else ; //return NULL;
 	
 
 }
@@ -114,7 +119,7 @@ obj * Lista::popBack()
 /// - jak elementu ?
 /// - jak sa dwa lub wiecej takie lementy ?
 
-obj * Lista::erase(int val)
+int Lista::erase(int val)
 {
 	obj * p;
 	obj * p1;
@@ -132,7 +137,7 @@ obj * Lista::erase(int val)
 	p->next = p1->next;
     
     counter--;
-    return p1;
+    return p1->value;
 	}
 } 
 
@@ -155,7 +160,6 @@ void Lista::showValues()
     }
 
 
-
 void test_zbyszka() 
 {
     Lista sl;
@@ -164,9 +168,7 @@ void test_zbyszka()
     
     for(int i = 1; i <= 10; i++)
     {
-        obj* p = new obj;
-        p->value = i;
-        sl.pushFront(p);
+        sl.pushFront(i);
         CHECK_EQUAL(sl.size(), i );
     }
     CHECK_EQUAL(sl.size(), 10 );
@@ -182,9 +184,8 @@ void test_na_usuwanie()
     CHECK_EQUAL(sl.size(), 0 );
     for(int i = 1; i <= 3; i++)
     {
-        obj* p = new obj;
-        p->value = i;
-        sl.pushFront(p);
+        
+        sl.pushFront(i);
     }
     
     CHECK_EQUAL(sl.first()->value, 3);
@@ -203,17 +204,14 @@ void stare_main()
 {
 
 	Lista sl;
-	int   i;
+	
   
 	cout << "(A) : "; sl.showValues();  
   
-	for(i = 1; i <= 10; i++)
+	for(int i = 1; i <= 10; i++)
 	{
-	    obj* p = new obj;
-	    p->value = i;
-	    sl.pushFront(p);
+        sl.pushFront(i);
 	}
-
 
 	cout << "(B) : ";   sl.showValues();
   
@@ -237,4 +235,5 @@ int main(int argc, char** argv)
     } else {
         return 0;
     }
+    system("PAUSE");
 }
