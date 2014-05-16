@@ -7,8 +7,21 @@ using namespace std;
 
 struct obj
 {
-	obj * next;
-	int value;	
+	
+    obj * next;
+	int value;
+	static int objcounter;
+    
+    obj()
+    {
+        objcounter++;
+    };	
+    
+    ~obj()
+    {
+        delete [] this;
+        objcounter--;
+    };
 };
 
 class ListaObserver 
@@ -276,6 +289,7 @@ void test_na_usuwanie()
     sl.erase(3);
 
 }
+
 void test_na_usuwanie_pusta()
 {
     Lista sl;
@@ -310,6 +324,33 @@ void test_observers()
     
 }
 
+void test_memory_leak()
+{
+    
+    Lista sl;
+    
+    CHECK_EQUAL(sl.size(), 0 );
+    for(int i = 1; i <= 3; i++)
+    {
+        sl.pushFront(i);
+    }
+    
+    CHECK_EQUAL(obj::objcounter, 3);
+   
+    sl.erase(1);
+    
+    CHECK_EQUAL(obj::objcounter, 2);
+   
+    sl.erase(3);
+    
+    CHECK_EQUAL(obj::objcounter, 1);
+ 
+    sl.erase(3);
+    
+    CHECK_EQUAL(obj::objcounter, 1);
+    
+}
+
 void stare_main()
 {
 
@@ -334,7 +375,7 @@ void stare_main()
 	cout << "(5) : ";   sl.showValues();
 }
 
-int main(int argc, char** argv)
+int main( )//int argc, char** argv)
 {
     RUN_TEST(stare_main);
     RUN_TEST(test_zbyszka);
