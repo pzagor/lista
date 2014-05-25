@@ -22,7 +22,6 @@ struct obj
     
     obj::~obj()
     {
-        delete this;
         objcounter--;
     }
 
@@ -53,6 +52,15 @@ class  Lista
 		
 		obj* first() { return front; }
 		obj* last()  { return back; }
+
+        ~Lista()
+        {
+            while (first())
+            {
+                popBack();
+            }
+        }
+
 		void addObserver(ListaObserver * p)
 		{
 		    observers.push_back(p);
@@ -146,20 +154,22 @@ int Lista::popFront()
 		p = front;
         int val = front->value;	
 		front = front->next;
+		delete p;
 		if(!front) back = NULL;
 		counter--;
 		notifyremove(val);
+		
 		return  val;	
 	}
 	return 0;
 }
 
-int Lista::popBack()
+int Lista::popBack()   // obtestowac
 {
-	obj * p;
+	
 	if (back)
 	{
-		p = back;
+        obj * p = back;
 		if(p == front) 
 		{
 			notifyremove(front->value);
@@ -177,18 +187,15 @@ int Lista::popBack()
 			
 		} 
 		counter--;
-		return p->value;
+        int pvalue = p->value;
+        delete p;
+        return pvalue;
+        
 	
 	}
-	
+    return 0;
 }
 
-
-//obj * Lista::erase(obj * p)
-//{
-//
-
-/// usuwa element o wartosc val z listy
 
 /// - jak elementu ?
 /// - jak sa dwa lub wiecej takie lementy ?
@@ -196,7 +203,7 @@ int Lista::popBack()
 void Lista::erase(int val)
 {
 	obj * current;
-	obj * prev;
+	obj * prev = 0;
 
 	if (!front) 
     {
@@ -208,7 +215,7 @@ void Lista::erase(int val)
         return;
     }
     current = front;
-    while(current->value != val) 
+    while(current->value != val)
 	{
 	    prev = current;
         current = current->next;
@@ -220,13 +227,14 @@ void Lista::erase(int val)
 	notifyremove(current->value);
     cout << current->value;
 	prev->next = current->next; 
+	
     counter--;
     if (!current->next)
     {
         back = prev;
     }      
-} 
-
+    delete current;
+}
 
 void Lista::showValues()
     {
@@ -330,25 +338,31 @@ void test_memory_leak()
     
     Lista sl;
     
+    CHECK_EQUAL(obj::objcounter, 0);
+    
     CHECK_EQUAL(sl.size(), 0 );
-    for(int i = 1; i <= 3; i++)
+    for(int i = 1; i <= 5; i++)
     {
         sl.pushFront(i);
     }
     
-    CHECK_EQUAL(obj::objcounter, 3);
+    CHECK_EQUAL(obj::objcounter, 5);
    
-    sl.erase(1);
+    sl.popFront();
+
+    CHECK_EQUAL(obj::objcounter, 4);
+   
+    sl.popBack();
+    
+    CHECK_EQUAL(obj::objcounter, 3);
+
+    sl.erase(2);
     
     CHECK_EQUAL(obj::objcounter, 2);
-   
-    sl.erase(3);
-    
-    CHECK_EQUAL(obj::objcounter, 1);
  
-    sl.erase(3);
+    sl.erase(5);
     
-    CHECK_EQUAL(obj::objcounter, 1);
+    CHECK_EQUAL(obj::objcounter, 2);
     
 }
 
@@ -356,9 +370,7 @@ void test_memory_leak()
 
 void stare_main()
 {
-
 	Lista sl;
-	
   
 	cout << "(A) : "; sl.showValues();  
   
@@ -376,22 +388,38 @@ void stare_main()
 	sl.erase(5);
 	
 	cout << "(5) : ";   sl.showValues();
+
 }
 
 int main(int argc, char** argv)
 {
+    CHECK_EQUAL(obj::objcounter, 0);
     RUN_TEST(stare_main);
+    CHECK_EQUAL(obj::objcounter, 0);
     RUN_TEST(test_zbyszka);
+    CHECK_EQUAL(obj::objcounter, 0);
     RUN_TEST(test_na_usuwanie_pusta);
+    CHECK_EQUAL(obj::objcounter, 0);
+    CHECK_EQUAL(obj::objcounter, 0);
     RUN_TEST(test_na_usuwanie);
+    CHECK_EQUAL(obj::objcounter, 0);
     RUN_TEST(test_observers);
+    CHECK_EQUAL(obj::objcounter, 0);
     RUN_TEST(test_memory_leak);
+    CHECK_EQUAL(obj::objcounter, 0);
+    cout << "Wykryto " << error_count << " bledow" << endl;
     
-    
+    system("PAUSE");
     if( error_count != 0 ) {
+
         return 1;
     } else {
         return 0;
     }
-    //system("PAUSE");
+    system("PAUSE");
 }
+
+
+// TODO     // obtestowac
+
+/// pop back czy wszedl w kazda galaz
