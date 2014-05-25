@@ -9,7 +9,23 @@ struct obj
 {
 	obj * next;
 	int value;	
+	static int objcounter;
+	obj();
+	~obj();
+	
 };
+    int obj::objcounter = 0;
+    obj::obj()
+    {
+        objcounter++;
+    }	
+    
+    obj::~obj()
+    {
+        delete this;
+        objcounter--;
+    }
+
 
 class ListaObserver 
 {
@@ -135,7 +151,7 @@ int Lista::popFront()
 		notifyremove(val);
 		return  val;	
 	}
-	else return p->value;
+	return 0;
 }
 
 int Lista::popBack()
@@ -309,6 +325,34 @@ void test_observers()
     CHECK_EQUAL(ob2.event_count, 2);
     
 }
+void test_memory_leak()
+{
+    
+    Lista sl;
+    
+    CHECK_EQUAL(sl.size(), 0 );
+    for(int i = 1; i <= 3; i++)
+    {
+        sl.pushFront(i);
+    }
+    
+    CHECK_EQUAL(obj::objcounter, 3);
+   
+    sl.erase(1);
+    
+    CHECK_EQUAL(obj::objcounter, 2);
+   
+    sl.erase(3);
+    
+    CHECK_EQUAL(obj::objcounter, 1);
+ 
+    sl.erase(3);
+    
+    CHECK_EQUAL(obj::objcounter, 1);
+    
+}
+
+
 
 void stare_main()
 {
@@ -341,6 +385,7 @@ int main(int argc, char** argv)
     RUN_TEST(test_na_usuwanie_pusta);
     RUN_TEST(test_na_usuwanie);
     RUN_TEST(test_observers);
+    RUN_TEST(test_memory_leak);
     
     
     if( error_count != 0 ) {
