@@ -1,9 +1,9 @@
-
+#include "gmock/gmock.h" 
 #include <iostream>
 #include <list>
 using namespace std;
 
-#include "test.h"
+//#include "test.h"
 
 struct obj
 {
@@ -254,61 +254,65 @@ void Lista::showValues()
     }
 
 
-void test_zbyszka() 
+TEST(test_zbyszka, test_zbyszka)
 {
+    ASSERT_EQ(obj::objcounter, 0);
     Lista sl;
     
-    CHECK_EQUAL(sl.size(), 0 );
+    ASSERT_EQ(sl.size(), 0 );
     
     for(int i = 1; i <= 10; i++)
     {
         sl.pushFront(i);
-        CHECK_EQUAL(sl.size(), i );
+        ASSERT_EQ(sl.size(), i );
     }
-    CHECK_EQUAL(sl.size(), 10 );
+    ASSERT_EQ(sl.size(), 10 );
     sl.popFront();
-    CHECK_EQUAL(sl.size(), 9 );
+    ASSERT_EQ(sl.size(), 9 );
     sl.erase(5);
-    CHECK_EQUAL(sl.size(), 8 );
+    ASSERT_EQ(sl.size(), 8 );
 }
 
-void test_na_usuwanie()
+TEST(test_na_usuwanie, test_na_usuwanie)
 {
+    ASSERT_EQ(obj::objcounter, 0);
     Lista sl;
-    CHECK_EQUAL(sl.size(), 0 );
+    ASSERT_EQ(sl.size(), 0 );
     for(int i = 1; i <= 3; i++)
     {
         sl.pushFront(i);
     }
     
-    CHECK_EQUAL(sl.first()->value, 3);
-    CHECK_EQUAL(sl.first()->next->value, 2);
-    CHECK_EQUAL(sl.first()->next->next->value, 1);
+    ASSERT_EQ(sl.first()->value, 3);
+    ASSERT_EQ(sl.first()->next->value, 2);
+    ASSERT_EQ(sl.first()->next->next->value, 1);
     
     sl.erase(1);
     
-    CHECK_EQUAL(sl.first()->value, 3);
-    CHECK_EQUAL(sl.first()->next->value, 2);
-    //CHECK_EQUAL(sl.first()->next->next, 0);
-    CHECK_EQUAL(sl.size(), 2);
-    CHECK_EQUAL(sl.first()->next, sl.last());
+    ASSERT_EQ(sl.first()->value, 3);
+    ASSERT_EQ(sl.first()->next->value, 2);
+    //ASSERT_EQ(sl.first()->next->next, 0);
+    ASSERT_EQ(sl.size(), 2);
+    ASSERT_EQ(sl.first()->next, sl.last());
     
     sl.erase(3);
     
-    CHECK_EQUAL(sl.first()->value, 2);
-    CHECK_EQUAL(sl.size(), 1);
+    ASSERT_EQ(sl.first()->value, 2);
+    ASSERT_EQ(sl.size(), 1);
     sl.erase(3);
 
 }
-void test_na_usuwanie_pusta()
+TEST(test_na_usuwanie, test_na_usuwanie_pusta)
 {
+    ASSERT_EQ(obj::objcounter, 0);
     Lista sl;
-    CHECK_EQUAL(sl.size(), 0 );
+    ASSERT_EQ(sl.size(), 0 );
     sl.erase(1);
 }
 
-void test_observers()
+TEST(test_observ, test_observ)
 {
+    ASSERT_EQ(obj::objcounter, 0);
     Lista sl;
     ListaObserverEmail ob1;
     ListaObserverWypisanie ob2;
@@ -317,60 +321,63 @@ void test_observers()
     
     sl.pushFront(2);
     
-    CHECK_EQUAL(ob1.event_count, 1);
-    CHECK_EQUAL(ob2.event_count, 1);
+    ASSERT_EQ(ob1.event_count, 1);
+    ASSERT_EQ(ob2.event_count, 1);
     
     sl.pushFront(1);
     
-    CHECK_EQUAL(ob1.event_count, 2);
-    CHECK_EQUAL(ob2.event_count, 2);
+    ASSERT_EQ(ob1.event_count, 2);
+    ASSERT_EQ(ob2.event_count, 2);
     
     sl.removeObserver(&ob2);
     
     sl.erase(1);
     
-    CHECK_EQUAL(ob1.event_count, 3);
-    CHECK_EQUAL(ob2.event_count, 2);
+    ASSERT_EQ(ob1.event_count, 3);
+    ASSERT_EQ(ob2.event_count, 2);
     
 }
-void test_memory_leak()
+TEST(test_memory_leak, test_memory_leak)
 {
-    
+    ASSERT_EQ(obj::objcounter, 0);
+
     Lista sl;
     
-    CHECK_EQUAL(obj::objcounter, 0);
+    ASSERT_EQ(obj::objcounter, 0);
     
-    CHECK_EQUAL(sl.size(), 0 );
+    ASSERT_EQ(sl.size(), 0 );
     for(int i = 1; i <= 5; i++)
     {
         sl.pushFront(i);
     }
     
-    CHECK_EQUAL(obj::objcounter, 5);
+    ASSERT_EQ(obj::objcounter, 5);
    
     sl.popFront();
 
-    CHECK_EQUAL(obj::objcounter, 4);
+    ASSERT_EQ(obj::objcounter, 4);
    
     sl.popBack();
     
-    CHECK_EQUAL(obj::objcounter, 3);
+    ASSERT_EQ(obj::objcounter, 3);
 
     sl.erase(2);
     
-    CHECK_EQUAL(obj::objcounter, 2);
+    ASSERT_EQ(obj::objcounter, 2);
  
     sl.erase(5);
     
-    CHECK_EQUAL(obj::objcounter, 2);
+    ASSERT_EQ(obj::objcounter, 2);
     
 }
 
 
 
-void stare_main()
+TEST (stare_main, stare_main)
 {
-	Lista sl;
+    ASSERT_EQ(obj::objcounter, 0);
+    
+    Lista sl;
   
 	cout << "(A) : "; sl.showValues();  
   
@@ -393,29 +400,33 @@ void stare_main()
 
 int main(int argc, char** argv)
 {
-    CHECK_EQUAL(obj::objcounter, 0);
-    RUN_TEST(stare_main);
-    CHECK_EQUAL(obj::objcounter, 0);
-    RUN_TEST(test_zbyszka);
-    CHECK_EQUAL(obj::objcounter, 0);
-    RUN_TEST(test_na_usuwanie_pusta);
-    CHECK_EQUAL(obj::objcounter, 0);
-    CHECK_EQUAL(obj::objcounter, 0);
-    RUN_TEST(test_na_usuwanie);
-    CHECK_EQUAL(obj::objcounter, 0);
-    RUN_TEST(test_observers);
-    CHECK_EQUAL(obj::objcounter, 0);
-    RUN_TEST(test_memory_leak);
-    CHECK_EQUAL(obj::objcounter, 0);
-    cout << "Wykryto " << error_count << " bledow" << endl;
+    //ASSERT_EQ(obj::objcounter, 0);
+    //RUN_TEST(stare_main);
+    //ASSERT_EQ(obj::objcounter, 0);
+    //RUN_TEST(test_zbyszka);
+    //ASSERT_EQ(obj::objcounter, 0);
+    //RUN_TEST(test_na_usuwanie_pusta);
+    //ASSERT_EQ(obj::objcounter, 0);
+    //ASSERT_EQ(obj::objcounter, 0);
+    //RUN_TEST(test_na_usuwanie);
+    //ASSERT_EQ(obj::objcounter, 0);
+    //RUN_TEST(test_observers);
+    //ASSERT_EQ(obj::objcounter, 0);
+    //RUN_TEST(test_memory_leak);
+    //ASSERT_EQ(obj::objcounter, 0);
+    //cout << "Wykryto " << error_count << " bledow" << endl;
     
-    system("PAUSE");
-    if( error_count != 0 ) {
+  
+
+    testing::InitGoogleMock(&argc, argv);
+    return RUN_ALL_TESTS();
+
+    /*if( error_count != 0 ) {
 
         return 1;
     } else {
         return 0;
-    }
+    }*/
     system("PAUSE");
 }
 
@@ -423,3 +434,4 @@ int main(int argc, char** argv)
 // TODO     // obtestowac
 
 /// pop back czy wszedl w kazda galaz
+
