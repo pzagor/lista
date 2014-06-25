@@ -11,6 +11,9 @@ struct obj
 	int value;	
 	static int objcounter;
 	obj();
+
+
+
 	~obj();
 	
 };
@@ -33,6 +36,7 @@ class ListaObserver
         virtual void itemDeleted(int val) = 0;
 }; 
 
+// sajadknas
 class  Lista
 {
 	private:
